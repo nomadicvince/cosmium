@@ -1,0 +1,11 @@
+{
+  "name": "cosmium",
+  "version": "1.0.0",
+  "description": "cosmium token ico",
+  "main": "cosmium.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vincent Moore",
+  "license": "ISC"
+}
