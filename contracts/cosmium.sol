@@ -54,3 +54,4 @@ contract Cosmium {
         return true;
     }
 }
+
