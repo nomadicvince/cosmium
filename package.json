@@ -2,10 +2,16 @@
   "name": "cosmium",
   "version": "1.0.0",
   "description": "cosmium token ico",
-  "main": "cosmium.js",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "lite-server"
   },
   "author": "Vincent Moore",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "lite-server": "^2.4.0"
+  }
 }
