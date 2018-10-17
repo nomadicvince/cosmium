@@ -1,57 +1,66 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
+//Cosmium token
 contract Cosmium {
-
     string public name = "Cosmium";
     string public symbol = "CMQ";
-    string public standard = "Cosmium v1.0";
-    uint256 public totalSupply; 
-
-    event Transfer(
-        address indexed _from,
-        address indexed _to,
-        uint256 _value
-    );
-
-    event Approval(
-        address indexed _owner,
-        address indexed _spender,
-        uint256 _value
-    );
-
-    mapping(address => uint256) public balanceOf;
-    mapping(address => mapping(address => uint256)) public allowance;
-  
-    constructor(uint256 _initialSupply) payable public {
-        balanceOf[msg.sender] = _initialSupply;
-        totalSupply = _initialSupply;
+    uint public decimals = 9;
+    
+    uint public supply;
+    address public founder;
+    
+    mapping(address => uint) public balances;
+    
+    mapping(address => mapping(address => uint)) allowed;
+    
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    
+    constructor() public {
+        supply = 4000000000000;
+        founder = msg.sender;
+        balances[founder] = supply;
     }
-
-    //transfer function
-    function transfer(address _to, uint256 _value) payable public returns (bool success) {
-        require(balanceOf[msg.sender] >= _value);
-        balanceOf[msg.sender] -= _value;
-        balanceOf[_to] += _value;
-        emit Transfer(msg.sender, _to, _value);
+    
+    function allowance(address tokenOwner, address spender) public view returns(uint256) {
+        return allowed[tokenOwner][spender];
+    }
+    
+    function approve(address spender, uint256 tokens) public returns (bool) {
+        require(balances[msg.sender] >= tokens);
+        require(tokens > 0);
+            
+        allowed[msg.sender][spender] = tokens;
+        emit Approval(msg.sender, spender, tokens);
         return true;
     }
-
-    //approve function
-    function approve(address _spender, uint256 _value) payable public returns (bool success) {
-        allowance[msg.sender][_spender] = _value;
-        emit Approval(msg.sender, _spender, _value);
+    
+    function transferFrom(address from, address to, uint256 tokens) public returns (bool) {
+        require(allowed[from][to] >= tokens);
+        require(balances[from] >= tokens);
+        
+        balances[from] -= tokens;
+        balances[to] += tokens;
+        
+        allowed[from][to] -= tokens;
+        
         return true;
     }
-
-    //transferFrom function
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
-        require(_value <= balanceOf[_from]);
-        require(_value <= allowance[_from][msg.sender]);
-        balanceOf[_from] -= _value;
-        balanceOf[_to] += _value;
-        allowance[_from][msg.sender] -= _value;
-        emit Transfer(_from, _to, _value);
+ 
+    function totalSupply() public view returns (uint256) {
+        return supply;
+    }
+    
+    function balanceOf(address tokenOwner) public view returns (uint256) {
+        return balances[tokenOwner];
+    }
+    
+    function transfer(address to, uint256 tokens) public returns (bool) {
+        require(balances[msg.sender] >= tokens && tokens > 0);
+        
+        balances[to] += tokens;
+        balances[msg.sender] -= tokens;
+        emit Transfer(msg.sender, to, tokens);
         return true;
     }
 }
-
